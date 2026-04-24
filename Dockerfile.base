@@ -1,0 +1,51 @@
+# Base image with pre-installed dependencies for rpicam-apps
+FROM debian:trixie-slim
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    python3 \
+    python3-pip \
+    python3-yaml \
+    python3-ply \
+    python3-jinja2 \
+    pkg-config \
+    ffmpeg \
+    meson \
+    cmake \
+    ninja-build \
+    libepoxy-dev \
+    libjpeg-dev \
+    libtiff5-dev \
+    libpng-dev \
+    libboost-program-options-dev \
+    libdrm-dev \
+    libexif-dev \
+    libavcodec-dev \
+    libavdevice-dev \
+    libavformat-dev \
+    libavutil-dev \
+    libswresample-dev \
+    libopencv-dev \
+    libyaml-dev \
+    libudev-dev \
+    libgnutls28-dev \
+    openssl \
+    checkinstall \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add the Raspberry Pi repository
+RUN apt-get update && apt-get install -y wget gnupg && \
+    wget -qO - http://archive.raspberrypi.com/debian/raspberrypi.gpg.key | gpg --dearmor -o /usr/share/keyrings/raspberrypi-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/raspberrypi-archive-keyring.gpg] http://archive.raspberrypi.com/debian/ trixie main" > /etc/apt/sources.list.d/raspi.list && \
+    apt-get update && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install libcamera from the Raspberry Pi repository
+RUN apt-get update && apt-get install -y \
+    libcamera0.6 \
+    libcamera-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /build

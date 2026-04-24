@@ -1,0 +1,10 @@
+# Исключаем всё, кроме директории source
+*
+!source/
+
+# Исключаем build артефакты из source, если они есть
+source/build/
+source/.git/
+source/**/*.o
+source/**/*.a
+source/**/*.so
